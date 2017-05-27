@@ -6,7 +6,7 @@ var keyc = true,
     keyt = true,
     keyr = true,
     keyx = true,
-    keyd = true,
+    keyd = true, 
     keyl = true,
     keym = true,
     keyh = true,
@@ -124,6 +124,7 @@ svg.append("defs").selectAll("marker")
     .attr("d", "M0,-5L10,0L0,5 L10,0 L0, -5")
     .style("stroke", "#4679BD")
     .style("opacity", "0.5");
+
 
 
 d3.json("basic.json", function(error, graph) {
@@ -269,10 +270,14 @@ d3.json("basic.json", function(error, graph) {
         });
 
     //ANIM
-/**
+
     setInterval(function() {
-        console.log(node[0]);
+        console.log(nodes)
+        myNode = {id: "asdf"}
+        nodes.push(myNode)
+        links.push({source: myNode, target: 0})
     }, 3000);
+    /**
     setInterval(function() {
         node[0].shift();
         restart()
@@ -280,22 +285,20 @@ d3.json("basic.json", function(error, graph) {
 **/
     function restart() {
         node = node.data(nodes);
-
         node.enter().insert("circle", ".cursor")
-            .attr("class", "node")
-            .attr("r", 5)
-
+            .attr("class", "node")  
+            .attr("r",5)
         node.exit()
             .remove();
-        /**
-                link = link.data(link);
 
-                link.enter().insert("line", ".node")
-                    .attr("class", "link");
-                link.exit()
+            link = link.data(links);
+
+            link.enter().insert("line", ".node")
+                .attr("class", "link");
+               link.exit()
                     .remove();
-        **/
-        force.start();
+        
+        force.start(); 
     }
 
 
@@ -413,6 +416,7 @@ d3.json("basic.json", function(error, graph) {
     d3.select(window).on("resize", resize).on("keydown", keydown);
 
     force.on("tick", function() {
+        restart()
         //updates to all for animation
         linkText
             .attr("x", function(d) {
@@ -440,7 +444,11 @@ d3.json("basic.json", function(error, graph) {
             })
             .attr("y2", function(d) {
                 return d.target.y;
-            });
+            })
+            link.attr("d", function(d) {
+                return "M0,-5L2.333333333333333,-10.25C4.666666666666666,-15.5,9.333333333333332,-26,6.999999999999999,-31.249999999999996C4.666666666666666,-36.5,-4.666666666666666,-36.5,-6.999999999999999,-31.249999999999996C-9.333333333333332,-26,-4.666666666666666,-15.5,-2.333333333333333,-10.25L0,-5"
+            })
+
 
         node.attr("cx", function(d) {
                 return d.x;

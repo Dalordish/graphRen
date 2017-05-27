@@ -43,11 +43,10 @@ def show(G, node_attribute = "id", edge_attribute = "label"): #Don't touch, show
     plot.show()
     
 
-G = nx.Graph()
+G = nx.DiGraph()
 G.add_edge("0","1")
 G.add_edge("1","0")
 G.add_edge("0","0")
-'''
 for i in range(0,10):
 	rand = random.randint(0,3)
 	if rand == 1:
@@ -57,10 +56,10 @@ for i in range(0,10):
 	elif rand==3:
 		G.add_node(i, type = "circle",color = "yellow",label = i)
 	else:
-		G.add_node(i, type = "diamond",color = "green",label = i)
+		G.add_node(i, type = "cross",color = "green",label = i)
 	for j in range(0,random.randint(0,5)):
 		G.add_edge(i,j, color = 'yellow')
-'''
+
 with open('basic.json', 'w') as outfile:
     json.dump(json_graph.node_link_data(G), outfile)
 
