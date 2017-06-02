@@ -127,7 +127,7 @@ svg.append("defs").selectAll("marker")
 
 
 
-d3.json("basic.json", function(error, graph) {
+d3.json("graph.json", function(error, graph) {
     var linkedByIndex = {};
     graph.links.forEach(function(d) {
         linkedByIndex[d.source + "," + d.target] = true;
@@ -159,13 +159,12 @@ d3.json("basic.json", function(error, graph) {
         .attr("class", "link-label")
         .attr("font-family", "Arial, Helvetica, sans-serif")
         .attr("fill", "Black")
-        .style("font", "normal 4px Arial")
+        .style("font", "normal 8px Arial")
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")
         .text(function(d) {
             return d.label
-            console.log(d)
-            //return "meme";
+            //console.log(d)
         });
 //Rendering edges
     var link = g.selectAll(".link")
@@ -331,8 +330,6 @@ d3.json("basic.json", function(error, graph) {
         })
 
             
-
-        
         force.start(); 
     }
 
