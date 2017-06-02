@@ -127,7 +127,7 @@ svg.append("defs").selectAll("marker")
 
 
 
-d3.json("basic.json", function(error, graph) {
+d3.json("graph.json", function(error, graph) {
     var linkedByIndex = {};
     graph.links.forEach(function(d) {
         linkedByIndex[d.source + "," + d.target] = true;
@@ -150,20 +150,23 @@ d3.json("basic.json", function(error, graph) {
         .links(graph.links)
         .start();
 
+        var nodes = force.nodes()
+        var links = force.links()
+//Adding edge labels
     var linkText = g.selectAll(".link")
         .data(graph.links)
         .enter().append("text")
         .attr("class", "link-label")
         .attr("font-family", "Arial, Helvetica, sans-serif")
         .attr("fill", "Black")
-        .style("font", "normal 4px Arial")
+        .style("font", "normal 8px Arial")
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")
         .text(function(d) {
-            console.log("text is d")
-            //return "meme";
+            return d.label
+            //console.log(d)
         });
-
+//Rendering edges
     var link = g.selectAll(".link")
         .data(graph.links)
         .enter().append("line")
@@ -184,16 +187,14 @@ d3.json("basic.json", function(error, graph) {
 
         }) // Modified line 
 
-    var nodes = force.nodes()
-    var links = force.links()
+
     var node = g.selectAll(".node")
         .data(graph.nodes)
         .enter().append("g")
         .attr("class", "node")
+        .call(force.drag)
 
-    .call(force.drag)
-
-
+    //code duplicated in data enter
     node.on("dblclick.zoom", function(d) {
         d3.event.stopPropagation();
         var dcx = (window.innerWidth / 2 - d.x * zoom.scale());
@@ -204,6 +205,19 @@ d3.json("basic.json", function(error, graph) {
 
     });
 
+    node.on("mouseover", function(d) {
+            set_highlight(d);
+        })
+        .on("mousedown", function(d) {
+            d3.event.stopPropagation();
+            focus_node = d;
+            set_focus(d)
+        if (highlight_node === null) set_highlight(d)
+
+        }).on("mouseout", function(d) {
+            exit_highlight();
+
+        });
 
 
 
@@ -217,8 +231,6 @@ d3.json("basic.json", function(error, graph) {
 
 
     var circle = node.append("path")
-
-
     .attr("d", d3.svg.symbol()
         .size(function(d) {
             return Math.PI * Math.pow(size(d.size) || nominal_base_node_size, 2);
@@ -255,28 +267,17 @@ d3.json("basic.json", function(error, graph) {
             return '\u2002' + d.id;
         });
 
-    node.on("mouseover", function(d) {
-            set_highlight(d);
-        })
-        .on("mousedown", function(d) {
-            d3.event.stopPropagation();
-            focus_node = d;
-            set_focus(d)
-            if (highlight_node === null) set_highlight(d)
-
-        }).on("mouseout", function(d) {
-            exit_highlight();
-
-        });
+    
 
     //ANIM
-
+/**
     setInterval(function() {
         console.log(nodes)
         myNode = {id: "asdf"}
         nodes.push(myNode)
         links.push({source: myNode, target: 0})
     }, 3000);
+    **/
     /**
     setInterval(function() {
         node[0].shift();
@@ -285,19 +286,50 @@ d3.json("basic.json", function(error, graph) {
 **/
     function restart() {
         node = node.data(nodes);
-        node.enter().insert("circle", ".cursor")
+        node.enter().insert("path")
             .attr("class", "node")  
             .attr("r",5)
         node.exit()
             .remove();
+        node.on("dblclick.zoom", function(d) {
+            d3.event.stopPropagation();
+            var dcx = (window.innerWidth / 2 - d.x * zoom.scale());
+            var dcy = (window.innerHeight / 2 - d.y * zoom.scale());
+            zoom.translate([dcx, dcy]);
+            g.attr("transform", "translate(" + dcx + "," + dcy + ")scale(" + zoom.scale() + ")");
+    });
+
+    node.on("mouseover", function(d) {
+            set_highlight(d);
+        })
+        .on("mousedown", function(d) {
+            d3.event.stopPropagation();
+            focus_node = d;
+            set_focus(d)
+        if (highlight_node === null) set_highlight(d)
+
+        }).on("mouseout", function(d) {
+            exit_highlight();
+
+        });
 
             link = link.data(links);
-
+            
             link.enter().insert("line", ".node")
                 .attr("class", "link");
                link.exit()
                     .remove();
-        
+
+            link.style("marker-end",  function(d) { // if digraph, return style marker-end as marker
+            if (graph.directed === true) {
+                return "url(#suit)"
+            }
+            else {
+                return "0"
+            }
+        })
+
+            
         force.start(); 
     }
 
