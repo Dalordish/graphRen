@@ -12,19 +12,23 @@ Currently the script loads from a .json file that must be named graph.json. You 
 
 # Working with networkX:
 
-'''
+```
 from networkx.readwrite import json_graph
 with open('graph.json', 'w') as outfile:
     json.dump(json_graph.node_link_data(G), outfile)
-'''
+```
 
 # Graph attributes
 Graph attributes that will change:
 
 Node labels : label
+
 Edge labels : label
+
 Node colors : color (either text or hex code)
+
 Edge colors : TBD
+
 Directedness : Graph 
 
 
