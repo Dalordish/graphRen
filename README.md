@@ -9,7 +9,30 @@ Error.
 
 Currently the script loads from a .json file that must be named graph.json. You can manually edit this in script.js if you need to.
 
+# Key Commands
 
+Hover over a node to highlight directly connected nodes and edges, click on it to highlight it
+
+Click and drag nodes to move them with d3 force.
+
+Doubleclick on a node to Focus the graph on it
+
+## Shape views
+
+C : Toggle view of Circle nodes
+
+S : Toggle view of Square nodes
+
+T : Toggle view of Triangle-Up nodes
+
+D: Toggle view of Triangle-Down ondes
+
+R : toglge view of Diamond nodes
+
+X : Toggle view of Cross nodes
+
+**NB there are more, need to be added to doccumentation.
+            
 # Working with networkX:
 
 ```
@@ -19,15 +42,30 @@ with open('graph.json', 'w') as outfile:
 ```
 
 # Graph attributes
-Graph attributes that will change:
+
+## Node properties
 
 Node labels : label
 
-Edge labels : label
-
 Node colors : color (either text or hex code)
 
-Edge colors : TBD
+Circle
+Square
+Triangle-Up
+Diamond
+Cross
+Triangle-Down
+
+
+Shape of node : shape
+
+## Edge properties
+
+Edge labels : label
+
+Edge colors : color (edge properity)
+
+## Graph properties
 
 Directedness : Graph 
 
